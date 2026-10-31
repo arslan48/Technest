@@ -1,8 +1,8 @@
-from django.http import HttpResponse
 from django.shortcuts import render
 
+from .models import Product
 
-def say_hello(request):
-	return render(request , 'index.html', {'name': 'Karlo,'})
-def say_bye(request):
-	return HttpResponse('Bye Bye')
+
+def home(request):
+	products = Product.objects.all()
+	return render(request, 'store/index.html', {'products': products})

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>TechNest</title>
+</head>
+<body>
+    <h1>Welcome to TechNest</h1>
+    <p>Your one-stop shop for mobile accessories and gadgets.</p>
+
+    <h2>Products</h2>
+    <ul>
+        {% for product in products %}
+            <li>
+                {{ product.name }} - Rs. {{ product.price }}
+                ({{ product.category.name }}) - Stock: {{ product.stock }}
+            </li>
+        {% empty %}
+            <li>No products available yet.</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
