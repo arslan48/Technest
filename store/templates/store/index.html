@@ -13,8 +13,11 @@
     <ul>
         {% for product in products %}
             <li>
-                {{ product.name }} - Rs. {{ product.price }}
-                ({{ product.category.name }}) - Stock: {{ product.stock }}
+                {% if product.image %}
+                    <img src="{{ product.image.url }}" alt="{{ product.name }}" width="100">
+                {% endif %}
+                <a href="{% url 'product_detail' product.id %}">{{ product.name }}</a>
+                - Rs. {{ product.price }} ({{ product.category.name }})
             </li>
         {% empty %}
             <li>No products available yet.</li>
