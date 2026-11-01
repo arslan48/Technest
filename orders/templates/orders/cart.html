@@ -50,6 +50,7 @@
         </table>
 
         <h3>Total: Rs. {{ cart.total }}</h3>
+        <a href="{% url 'checkout' %}">Proceed to Checkout</a>
     {% else %}
         <p>Your cart is empty.</p>
     {% endif %}

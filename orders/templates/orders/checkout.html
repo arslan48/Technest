@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Checkout - TechNest</title>
+</head>
+<body>
+    <p><a href="{% url 'cart_detail' %}">Back to cart</a></p>
+
+    <h1>Checkout</h1>
+
+    {% if messages %}
+        <ul>
+            {% for message in messages %}
+                <li>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    <h2>Order summary</h2>
+    <ul>
+        {% for item in cart_items %}
+            <li>{{ item.quantity }} x {{ item.product.name }} - Rs. {{ item.subtotal }}</li>
+        {% endfor %}
+    </ul>
+    <h3>Total: Rs. {{ cart.total }}</h3>
+
+    <h2>Delivery details</h2>
+    <p>Payment method: Cash on Delivery</p>
+
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Place Order</button>
+    </form>
+</body>
+</html>
