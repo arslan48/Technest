@@ -1,84 +1,57 @@
-# TechNest – Student Marketplace
+# TechNest
 
-TechNest is a Django-based student marketplace designed for buying, selling, and exchanging used academic items within a campus community.
+TechNest is a web-based e-commerce platform for mobile accessories and gadgets. The system allows customers to browse products, search by category, add items to a cart, place orders with Cash on Delivery, and view their order history.
 
-The platform helps students find affordable books, calculators, laptops, stationery, and other study-related items without depending on informal WhatsApp groups or general marketplace websites. It is built for a student-focused environment where only registered students can list and buy items.
+This project is developed as a final-year project and is built using Django with a custom front-end design using HTML, CSS, and JavaScript.
 
-## Project Aim
+## Project Overview
 
-Many students spend a large amount of money on academic items that are used only for a short time. After a semester or year, these items become unused while junior students still need them.
-
-TechNest gives students a simple and trusted marketplace where they can:
-
-- sell used academic items
-- buy needed study materials at lower prices
-- exchange items with other students
-- browse listings by category and price
-- contact sellers directly
-- save favorite items
-- report suspicious or unwanted listings
+Mobile accessories such as phone covers, chargers, earbuds, power banks, and other gadgets are widely used by students and customers. In local markets, users often need to visit multiple shops to compare prices and availability. TechNest solves this problem by creating a single online store where customers can purchase products more easily and efficiently.
 
 ## Main Features
 
-- Student registration and login
-- Add, edit, and delete listings
-- Upload product or item images
-- Search by item name
-- Filter listings by category and price
-- View product details
-- Save favorite items
-- Contact sellers or ask about an item
-- Mark listings as sold or unavailable
-- Admin moderation panel for managing users and listings
-- Clean responsive design using custom HTML, CSS, and JavaScript
+- User registration and login
+- Product catalog with categories
+- Search and filter options
+- Product detail pages
+- Shopping cart
+- Cash on Delivery checkout
+- Order history
+- Admin panel for managing products, orders, and users
+- Responsive design for mobile and desktop devices
 
-## Project Scope
+## Objectives
 
-This project focuses on a student marketplace for academic items and includes:
-
-- user accounts
-- listing management
-- product search and filtering
-- item categories
-- contact requests
-- favorites
-- admin moderation
-
-It does not include online payment, delivery services, or public access for non-students in the first version.
+- Develop a responsive e-commerce website for mobile accessories and gadgets
+- Implement secure user authentication
+- Provide a searchable and categorized product catalog
+- Support cart and checkout flow
+- Provide order tracking and order history
+- Build an admin panel for managing business operations
+- Complete and test the project within the project timeline
 
 ## Technology Stack
 
 - Python
 - Django
-- SQLite (used for development)
+- SQLite
 - HTML
 - CSS
 - JavaScript
-- Pillow for image handling
-
-## Why This Project Matters
-
-This platform helps students save money, reduce waste, and make it easier to reuse useful academic materials. It also creates a safer buying and selling environment than public classified websites because users are connected through a college-based student system.
+- Git and GitHub
 
 ## Local Setup
 
-1. Open a terminal in the project folder.
-2. Create a virtual environment:
+1. Create a virtual environment:
 
 ```bash
 python -m venv venv
 ```
 
-On Windows:
+2. Activate the environment:
 
 ```bash
 venv\Scripts\activate
-```
-
-On macOS/Linux:
-
-```bash
-source venv/bin/activate
 ```
 
 3. Install dependencies:
@@ -87,19 +60,19 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-4. Apply database migrations:
+4. Apply migrations:
 
 ```bash
 python manage.py migrate
 ```
 
-5. Start the development server:
+5. Run the server:
 
 ```bash
 python manage.py runserver
 ```
 
-6. Open the website in your browser:
+6. Open the website:
 
 ```text
 http://127.0.0.1:8000/
@@ -107,24 +80,21 @@ http://127.0.0.1:8000/
 
 ## Important Notes
 
-- This project is designed for academic and educational purposes.
 - SQLite is used for development and testing.
-- For deployment, the project should be updated with stronger security and production-ready settings.
-- Secret keys and sensitive environment values should not be committed publicly.
+- Sensitive settings such as secret keys should not be committed publicly.
 
 ## Future Improvements
 
-- email verification for student accounts
-- better admin dashboard
-- messaging system between buyer and seller
-- exchange request management
-- improved filtering and sorting
-- mobile-friendly upgrade
-- live deployment on a hosting platform
+- online payment integration
+- email and SMS notifications
+- customer reviews and ratings
+- improved inventory management
+- admin dashboard enhancements
+- deployment on a live hosting platform
 
 ## Academic Context
 
-This project is developed as a final-year project for a student-focused marketplace application. The goal is to build a practical web platform that supports campus trading, reduces unnecessary waste, and makes academic resources more affordable for students.
+This project is developed as a final-year project to demonstrate practical full-stack web development. It includes requirement analysis, database design, authentication, e-commerce workflows, testing, and project documentation.
 
 ## License
 
