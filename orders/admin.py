@@ -16,4 +16,4 @@ class OrderAdmin(admin.ModelAdmin):
     list_display = ("id", "user", "total", "status", "created_at")
     list_filter = ("status",)
     list_editable = ("status",)
-    inlines = [OrderItemInline]
+    inlines = (OrderItemInline,)

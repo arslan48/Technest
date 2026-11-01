@@ -11,7 +11,7 @@ from .models import Cart, CartItem, Order, OrderItem
 
 
 def get_user_cart(user):
-    cart, created = Cart.objects.get_or_create(user=user)
+    cart, _created = Cart.objects.get_or_create(user=user)  # ty: ignore[unresolved-attribute]
     return cart
 
 
@@ -31,7 +31,7 @@ def add_to_cart(request, product_id):
         return redirect('product_detail', product_id=product.id)
 
     cart = get_user_cart(request.user)
-    item, created = CartItem.objects.get_or_create(cart=cart, product=product)
+    item, created = CartItem.objects.get_or_create(cart=cart, product=product)  # ty: ignore[unresolved-attribute]
 
     if not created:
         if item.quantity < product.stock:
@@ -86,7 +86,7 @@ def checkout(request):
         if form.is_valid():
             try:
                 with transaction.atomic():
-                    order = Order.objects.create(
+                    order = Order.objects.create(  # ty: ignore[unresolved-attribute]
                         user=request.user,
                         phone=form.cleaned_data['phone'],
                         address=form.cleaned_data['address'],
@@ -105,7 +105,7 @@ def checkout(request):
                                 f'Only {product.stock} left.'
                             )
 
-                        OrderItem.objects.create(
+                        OrderItem.objects.create(  # ty: ignore[unresolved-attribute]
                             order=order,
                             product=product,
                             quantity=item.quantity,
@@ -133,5 +133,5 @@ def checkout(request):
 
 @login_required
 def order_history(request):
-    orders = Order.objects.filter(user=request.user).prefetch_related('items__product')
+    orders = Order.objects.filter(user=request.user).prefetch_related('items__product')  # ty: ignore[unresolved-attribute]
     return render(request, 'orders/order_history.html', {'orders': orders})
