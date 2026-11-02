@@ -1,57 +1,90 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>TechNest</title>
-</head>
-<body>
-    <div>
-        {% if user.is_authenticated %}
-            <span>Hello, {{ user.username }}</span>
-            <form method="post" action="{% url 'logout' %}" style="display:inline;">
-                {% csrf_token %}
-                <button type="submit">Logout</button>
-            </form>
-        {% else %}
-            <a href="{% url 'login' %}">Login</a>
-            <a href="{% url 'register' %}">Register</a>
-        {% endif %}
-        <a href="{% url 'cart_detail' %}">Cart</a>
-        <a href="{% url 'order_history' %}">My Orders</a>
-    </div>
+{% extends "store/base.html" %}
 
-    <h1>Welcome to TechNest</h1>
-    <p>Your one-stop shop for mobile accessories and gadgets.</p>
+{% block title %}TechNest | Mobile Accessories &amp; Gadgets{% endblock %}
 
-    <form method="get" action="{% url 'home' %}">
-        <input type="text" name="q" placeholder="Search products" value="{{ query }}">
-        <select name="category">
-            <option value="">All categories</option>
-            {% for category in categories %}
-                <option value="{{ category.id }}"
-                    {% if selected_category == category.id|stringformat:"s" %}selected{% endif %}>
-                    {{ category.name }}
-                </option>
+{% block content %}
+    <section class="hero">
+        <div class="hero-copy">
+            <span class="eyebrow">Tech that fits your life</span>
+            <h1>Find your next<br><span>favourite gadget.</span></h1>
+            <p>Shop reliable mobile accessories and everyday tech, all in one place.</p>
+            <a class="button" href="#products">Explore products <span aria-hidden="true">→</span></a>
+        </div>
+        <div class="hero-art" aria-hidden="true">
+            <div class="hero-orbit orbit-one"></div>
+            <div class="hero-orbit orbit-two"></div>
+            <div class="hero-device">
+                <span class="device-camera"></span>
+                <span class="device-screen"></span>
+            </div>
+            <span class="hero-spark spark-one">✦</span>
+            <span class="hero-spark spark-two">+</span>
+        </div>
+    </section>
+
+    <section class="catalog-section" id="products">
+        <div class="section-heading">
+            <div>
+                <span class="eyebrow">The collection</span>
+                <h2>Shop the latest</h2>
+            </div>
+            <p class="section-caption">Good gear. Fair prices. Ready for you.</p>
+        </div>
+
+        <form class="search-panel" method="get" action="{% url 'home' %}">
+            <label class="search-input-wrap">
+                <span class="sr-only">Search products</span>
+                <span class="search-icon" aria-hidden="true"></span>
+                <input type="search" name="q" placeholder="Search products..." value="{{ query }}">
+            </label>
+            <label class="select-wrap">
+                <span class="sr-only">Filter by category</span>
+                <select name="category">
+                    <option value="">All categories</option>
+                    {% for category in categories %}
+                        <option value="{{ category.id }}" {% if selected_category == category.id|stringformat:"s" %}selected{% endif %}>{{ category.name }}</option>
+                    {% endfor %}
+                </select>
+            </label>
+            <button class="button search-button" type="submit">Search</button>
+            <a class="reset-link" href="{% url 'home' %}">Reset</a>
+        </form>
+
+        <div class="product-grid">
+            {% for product in products %}
+                <article class="product-card">
+                    <a class="product-image" href="{% url 'product_detail' product.id %}" aria-label="View {{ product.name }}">
+                        {% if product.image %}
+                            <img src="{{ product.image.url }}" alt="{{ product.name }}">
+                        {% else %}
+                            <span class="image-placeholder" aria-hidden="true">
+                                <span class="placeholder-device"></span>
+                                <span class="placeholder-label">Image coming soon</span>
+                            </span>
+                        {% endif %}
+                        <span class="category-badge">{{ product.category.name }}</span>
+                    </a>
+                    <div class="product-info">
+                        <h3><a href="{% url 'product_detail' product.id %}">{{ product.name }}</a></h3>
+                        <div class="product-meta">
+                            <span class="price">Rs. {{ product.price }}</span>
+                            {% if product.stock > 0 %}
+                                <span class="stock-status"><span class="status-dot"></span> In stock</span>
+                            {% else %}
+                                <span class="stock-status stock-out">Out of stock</span>
+                            {% endif %}
+                        </div>
+                        <a class="button button-outline product-action" href="{% url 'product_detail' product.id %}">View Details <span aria-hidden="true">→</span></a>
+                    </div>
+                </article>
+            {% empty %}
+                <div class="empty-state product-empty">
+                    <span class="empty-icon icon-search" aria-hidden="true"></span>
+                    <h3>No products found</h3>
+                    <p>Try a different search or category to find what you need.</p>
+                    <a class="button button-outline" href="{% url 'home' %}">Clear filters</a>
+                </div>
             {% endfor %}
-        </select>
-        <button type="submit">Search</button>
-        <a href="{% url 'home' %}">Reset</a>
-    </form>
-
-    <h2>Products</h2>
-    <ul>
-        {% for product in products %}
-            <li>
-                {% if product.image %}
-                    <img src="{{ product.image.url }}" alt="{{ product.name }}" width="100">
-                {% endif %}
-                <a href="{% url 'product_detail' product.id %}">{{ product.name }}</a>
-                - Rs. {{ product.price }} ({{ product.category.name }})
-            </li>
-        {% empty %}
-            <li>No products found.</li>
-        {% endfor %}
-    </ul>
-</body>
-</html>
+        </div>
+    </section>
+{% endblock %}

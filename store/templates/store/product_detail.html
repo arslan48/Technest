@@ -1,39 +1,38 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{{ product.name }} - TechNest</title>
-</head>
-<body>
-    <p><a href="{% url 'home' %}">Back to home</a></p>
+{% extends "store/base.html" %}
 
-    {% if messages %}
-        <ul>
-            {% for message in messages %}
-                <li>{{ message }}</li>
-            {% endfor %}
-        </ul>
-    {% endif %}
+{% block title %}{{ product.name }} | TechNest{% endblock %}
 
-    <h1>{{ product.name }}</h1>
-
-    {% if product.image %}
-        <img src="{{ product.image.url }}" alt="{{ product.name }}" width="250">
-    {% endif %}
-
-    <p>Category: {{ product.category.name }}</p>
-    <p>Price: Rs. {{ product.price }}</p>
-    <p>{{ product.description }}</p>
-
-    {% if product.stock > 0 %}
-        <p>In stock: {{ product.stock }}</p>
-        <form method="post" action="{% url 'add_to_cart' product.id %}">
-            {% csrf_token %}
-            <button type="submit">Add to Cart</button>
-        </form>
-    {% else %}
-        <p>Out of stock</p>
-    {% endif %}
-</body>
-</html>
+{% block content %}
+    <div class="breadcrumb"><a href="{% url 'home' %}">Home</a><span aria-hidden="true">/</span><span>{{ product.name }}</span></div>
+    <section class="detail-layout">
+        <div class="detail-image">
+            {% if product.image %}
+                <img src="{{ product.image.url }}" alt="{{ product.name }}">
+            {% else %}
+                <span class="image-placeholder detail-placeholder" aria-hidden="true">
+                    <span class="placeholder-device"></span>
+                    <span class="placeholder-label">Image coming soon</span>
+                </span>
+            {% endif %}
+        </div>
+        <div class="detail-info">
+            <span class="category-badge detail-category">{{ product.category.name }}</span>
+            <h1>{{ product.name }}</h1>
+            <p class="detail-price">Rs. {{ product.price }}</p>
+            <div class="detail-divider"></div>
+            <h2 class="detail-label">About this product</h2>
+            <p class="detail-description">{{ product.description }}</p>
+            {% if product.stock > 0 %}
+                <p class="stock-status detail-stock"><span class="status-dot"></span> In stock: {{ product.stock }}</p>
+                <form method="post" action="{% url 'add_to_cart' product.id %}">
+                    {% csrf_token %}
+                    <button class="button detail-cart-button" type="submit">Add to Cart <span aria-hidden="true">→</span></button>
+                </form>
+            {% else %}
+                <p class="stock-status stock-out detail-stock">Out of stock</p>
+                <button class="button detail-cart-button" type="button" disabled>Currently unavailable</button>
+            {% endif %}
+            <a class="back-link" href="{% url 'home' %}">← Back to shopping</a>
+        </div>
+    </section>
+{% endblock %}
