@@ -1,39 +1,47 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>My Orders - TechNest</title>
-</head>
-<body>
-    <p><a href="{% url 'home' %}">Back to home</a></p>
+{% extends "store/base.html" %}
 
-    <h1>My Orders</h1>
+{% block title %}My Orders | TechNest{% endblock %}
 
-    {% if messages %}
-        <ul>
-            {% for message in messages %}
-                <li>{{ message }}</li>
-            {% endfor %}
-        </ul>
-    {% endif %}
-
-    {% for order in orders %}
+{% block content %}
+    <div class="page-heading">
         <div>
-            <h3>Order #{{ order.id }} - {{ order.status }}</h3>
-            <p>Placed on: {{ order.created_at }}</p>
-            <p>Phone: {{ order.phone }}</p>
-            <p>Address: {{ order.address }}</p>
-            <ul>
-                {% for item in order.items.all %}
-                    <li>{{ item.quantity }} x {{ item.product.name }} - Rs. {{ item.subtotal }}</li>
-                {% endfor %}
-            </ul>
-            <p><strong>Total: Rs. {{ order.total }}</strong></p>
-            <hr>
+            <span class="eyebrow">Your TechNest activity</span>
+            <h1>My Orders</h1>
         </div>
-    {% empty %}
-        <p>You have not placed any orders yet.</p>
-    {% endfor %}
-</body>
-</html>
+        <a class="button button-outline" href="{% url 'home' %}">Shop more <span aria-hidden="true">→</span></a>
+    </div>
+
+    <section class="orders-list">
+        {% for order in orders %}
+            <article class="order-card">
+                <div class="order-card-heading">
+                    <div><span class="order-id">Order #{{ order.id }}</span><p>Placed on {{ order.created_at }}</p></div>
+                    <span class="status-badge status-{{ order.status|lower }}">{{ order.status }}</span>
+                </div>
+                <div class="order-details">
+                    <div class="order-items">
+                        {% for item in order.items.all %}
+                            <div class="order-line">
+                                <div><strong>{{ item.product.name }}</strong><span>Qty: {{ item.quantity }}</span></div>
+                                <strong>Rs. {{ item.subtotal }}</strong>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <div class="delivery-details">
+                        <span class="detail-label">Delivery details</span>
+                        <p>{{ order.phone }}</p>
+                        <p>{{ order.address }}</p>
+                    </div>
+                </div>
+                <div class="order-total"><span>Order total</span><strong>Rs. {{ order.total }}</strong></div>
+            </article>
+        {% empty %}
+            <div class="empty-state page-empty">
+                <span class="empty-icon icon-file" aria-hidden="true"></span>
+                <h2>No orders yet</h2>
+                <p>Your orders will appear here once you place one.</p>
+                <a class="button" href="{% url 'home' %}">Explore products</a>
+            </div>
+        {% endfor %}
+    </section>
+{% endblock %}

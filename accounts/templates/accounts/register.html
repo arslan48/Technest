@@ -1,21 +1,24 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Register - TechNest</title>
-</head>
-<body>
-    <p><a href="{% url 'home' %}">Back to home</a></p>
+{% extends "store/base.html" %}
 
-    <h1>Create an account</h1>
+{% block title %}Create Account | TechNest{% endblock %}
 
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Register</button>
-    </form>
-
-    <p>Already have an account? <a href="{% url 'login' %}">Login</a></p>
-</body>
-</html>
+{% block content %}
+    <section class="auth-wrap">
+        <div class="auth-card">
+            <span class="eyebrow">Join the nest</span>
+            <h1>Create an account</h1>
+            <p class="auth-intro">Set up your account to start shopping at TechNest.</p>
+            <form class="django-form" method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button class="button auth-submit" type="submit">Create Account</button>
+            </form>
+            <p class="auth-switch">Already have an account? <a href="{% url 'login' %}">Login</a></p>
+        </div>
+        <div class="auth-aside">
+            <span class="aside-mark" aria-hidden="true">T</span>
+            <h2>Better gear for your day-to-day.</h2>
+            <p>Make your TechNest account and find your new favourite essentials.</p>
+        </div>
+    </section>
+{% endblock %}

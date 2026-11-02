@@ -1,58 +1,68 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Your Cart - TechNest</title>
-</head>
-<body>
-    <p><a href="{% url 'home' %}">Continue shopping</a></p>
+{% extends "store/base.html" %}
 
-    <h1>Your Cart</h1>
+{% block title %}Your Cart | TechNest{% endblock %}
 
-    {% if messages %}
-        <ul>
-            {% for message in messages %}
-                <li>{{ message }}</li>
-            {% endfor %}
-        </ul>
-    {% endif %}
+{% block content %}
+    <div class="page-heading">
+        <div>
+            <span class="eyebrow">Almost yours</span>
+            <h1>Your Cart</h1>
+        </div>
+        <a class="back-link" href="{% url 'home' %}">← Continue shopping</a>
+    </div>
 
     {% if cart.items.all %}
-        <table border="1" cellpadding="8">
-            <tr>
-                <th>Product</th>
-                <th>Price</th>
-                <th>Quantity</th>
-                <th>Subtotal</th>
-                <th>Remove</th>
-            </tr>
-            {% for item in cart.items.all %}
-                <tr>
-                    <td>{{ item.product.name }}</td>
-                    <td>Rs. {{ item.product.price }}</td>
-                    <td>
-                        <form method="post" action="{% url 'update_cart' item.id %}">
-                            {% csrf_token %}
-                            <input type="number" name="quantity" value="{{ item.quantity }}" min="1" max="{{ item.product.stock }}">
-                            <button type="submit">Update</button>
-                        </form>
-                    </td>
-                    <td>Rs. {{ item.subtotal }}</td>
-                    <td>
-                        <form method="post" action="{% url 'remove_from_cart' item.id %}">
-                            {% csrf_token %}
-                            <button type="submit">Remove</button>
-                        </form>
-                    </td>
-                </tr>
-            {% endfor %}
-        </table>
-
-        <h3>Total: Rs. {{ cart.total }}</h3>
-        <a href="{% url 'checkout' %}">Proceed to Checkout</a>
+        <div class="cart-layout">
+            <div class="table-wrap">
+                <table class="data-table cart-table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Product</th>
+                            <th scope="col">Price</th>
+                            <th scope="col">Quantity</th>
+                            <th scope="col">Subtotal</th>
+                            <th scope="col"><span class="sr-only">Remove</span></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in cart.items.all %}
+                            <tr>
+                                <td class="cart-product-cell"><span class="cart-product-icon" aria-hidden="true"></span><strong>{{ item.product.name }}</strong></td>
+                                <td data-label="Price">Rs. {{ item.product.price }}</td>
+                                <td data-label="Quantity">
+                                    <form class="quantity-form" method="post" action="{% url 'update_cart' item.id %}">
+                                        {% csrf_token %}
+                                        <input type="number" name="quantity" value="{{ item.quantity }}" min="1" max="{{ item.product.stock }}" aria-label="Quantity for {{ item.product.name }}">
+                                        <button class="button button-small button-outline" type="submit">Update</button>
+                                    </form>
+                                </td>
+                                <td class="subtotal-cell" data-label="Subtotal">Rs. {{ item.subtotal }}</td>
+                                <td class="remove-cell">
+                                    <form method="post" action="{% url 'remove_from_cart' item.id %}">
+                                        {% csrf_token %}
+                                        <button class="remove-button" type="submit" aria-label="Remove {{ item.product.name }}">Remove</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <aside class="cart-summary">
+                <h2>Order summary</h2>
+                <div class="summary-row"><span>Subtotal</span><strong>Rs. {{ cart.total }}</strong></div>
+                <div class="summary-row"><span>Delivery</span><span>Calculated at checkout</span></div>
+                <div class="summary-total"><span>Total</span><strong>Rs. {{ cart.total }}</strong></div>
+                <a class="button checkout-button" href="{% url 'checkout' %}">Proceed to Checkout <span aria-hidden="true">→</span></a>
+                <p class="secure-note"><span aria-hidden="true">✓</span> Cash on Delivery available</p>
+            </aside>
+        </div>
     {% else %}
-        <p>Your cart is empty.</p>
+        <div class="empty-state page-empty">
+            <span class="empty-icon icon-bag" aria-hidden="true"></span>
+            <h2>Your cart is empty</h2>
+            <p>Looks like you haven't found your next favourite yet.</p>
+            <a class="button" href="{% url 'home' %}">Start shopping</a>
+        </div>
     {% endif %}
-</body>
-</html>
+{% endblock %}

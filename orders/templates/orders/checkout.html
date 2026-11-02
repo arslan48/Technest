@@ -1,38 +1,48 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Checkout - TechNest</title>
-</head>
-<body>
-    <p><a href="{% url 'cart_detail' %}">Back to cart</a></p>
+{% extends "store/base.html" %}
 
-    <h1>Checkout</h1>
+{% block title %}Checkout | TechNest{% endblock %}
 
-    {% if messages %}
-        <ul>
-            {% for message in messages %}
-                <li>{{ message }}</li>
-            {% endfor %}
-        </ul>
-    {% endif %}
+{% block content %}
+    <div class="page-heading">
+        <div>
+            <span class="eyebrow">One last step</span>
+            <h1>Checkout</h1>
+        </div>
+        <a class="back-link" href="{% url 'cart_detail' %}">← Back to cart</a>
+    </div>
 
-    <h2>Order summary</h2>
-    <ul>
-        {% for item in cart_items %}
-            <li>{{ item.quantity }} x {{ item.product.name }} - Rs. {{ item.subtotal }}</li>
-        {% endfor %}
-    </ul>
-    <h3>Total: Rs. {{ cart.total }}</h3>
-
-    <h2>Delivery details</h2>
-    <p>Payment method: Cash on Delivery</p>
-
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Place Order</button>
-    </form>
-</body>
-</html>
+    <div class="checkout-layout">
+        <section class="checkout-card">
+            <div class="card-heading">
+                <span class="step-number">01</span>
+                <div><h2>Delivery details</h2><p>Where should we deliver your order?</p></div>
+            </div>
+            <form class="django-form checkout-form" method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <div class="payment-note">
+                    <span class="payment-icon" aria-hidden="true">✓</span>
+                    <div><strong>Cash on Delivery</strong><p>Pay in cash when your order arrives.</p></div>
+                </div>
+                <button class="button auth-submit" type="submit">Place Order <span aria-hidden="true">→</span></button>
+                <p class="phone-hint">Enter a valid Pakistani mobile number: 11 digits starting with 03.</p>
+            </form>
+        </section>
+        <aside class="checkout-summary">
+            <div class="card-heading">
+                <span class="step-number">02</span>
+                <div><h2>Order summary</h2><p>{{ cart_items|length }} item{{ cart_items|length|pluralize }}</p></div>
+            </div>
+            <div class="order-lines">
+                {% for item in cart_items %}
+                    <div class="order-line">
+                        <div><strong>{{ item.product.name }}</strong><span>Qty: {{ item.quantity }}</span></div>
+                        <strong>Rs. {{ item.subtotal }}</strong>
+                    </div>
+                {% endfor %}
+            </div>
+            <div class="summary-total"><span>Total</span><strong>Rs. {{ cart.total }}</strong></div>
+            <p class="secure-note"><span aria-hidden="true">✓</span> Secure checkout, no online payment required</p>
+        </aside>
+    </div>
+{% endblock %}
