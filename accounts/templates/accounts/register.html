@@ -3,22 +3,69 @@
 {% block title %}Create Account | TechNest{% endblock %}
 
 {% block content %}
-    <section class="auth-wrap">
-        <div class="auth-card">
-            <span class="eyebrow">Join the nest</span>
-            <h1>Create an account</h1>
-            <p class="auth-intro">Set up your account to start shopping at TechNest.</p>
-            <form class="django-form" method="post">
+    <div class="auth-wrapper">
+        <section class="auth-card" aria-labelledby="register-heading">
+            <div class="auth-header">
+                <span class="brand-emblem" style="margin: 0 auto var(--space-3);" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+                        <polyline points="2 17 12 22 22 17"></polyline>
+                        <polyline points="2 12 12 17 22 12"></polyline>
+                    </svg>
+                </span>
+                <h1 class="auth-title" id="register-heading">Create your account</h1>
+                <p class="auth-subtitle">Register to easily track your hardware orders and access faster checkout.</p>
+            </div>
+
+            <form class="django-form" method="post" novalidate>
                 {% csrf_token %}
-                {{ form.as_p }}
-                <button class="button auth-submit" type="submit">Create Account</button>
+
+                {% if form.non_field_errors %}
+                    <div class="alert alert-error" role="alert">
+                        <div class="alert-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <line x1="12" y1="8" x2="12" y2="12"></line>
+                                <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                            </svg>
+                        </div>
+                        <div>
+                            {% for error in form.non_field_errors %}
+                                <p>{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                    </div>
+                {% endif %}
+
+                {% for field in form %}
+                    <p>
+                        {{ field.label_tag }}
+                        {{ field }}
+                        {% if field.errors %}
+                            <ul class="errorlist" role="alert">
+                                {% for error in field.errors %}
+                                    <li>{{ error }}</li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                        {% if field.help_text %}
+                            <span class="helptext">{{ field.help_text }}</span>
+                        {% endif %}
+                    </p>
+                {% endfor %}
+
+                <button class="btn btn-primary btn-full" type="submit" style="margin-top: var(--space-2);">
+                    <span>Create Account</span>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                        <polyline points="12 5 19 12 12 19"></polyline>
+                    </svg>
+                </button>
             </form>
-            <p class="auth-switch">Already have an account? <a href="{% url 'login' %}">Login</a></p>
-        </div>
-        <div class="auth-aside">
-            <span class="aside-mark" aria-hidden="true">T</span>
-            <h2>Better gear for your day-to-day.</h2>
-            <p>Make your TechNest account and find your new favourite essentials.</p>
-        </div>
-    </section>
+
+            <div class="auth-footer">
+                <p>Already have an account? <a href="{% url 'login' %}">Sign in here</a></p>
+            </div>
+        </section>
+    </div>
 {% endblock %}

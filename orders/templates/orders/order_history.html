@@ -5,42 +5,100 @@
 {% block content %}
     <div class="page-heading">
         <div>
-            <span class="eyebrow">Your TechNest activity</span>
-            <h1>My Orders</h1>
+            <h1 class="page-heading-title">My Orders</h1>
+            <p class="page-heading-sub">Track dispatch progress and view past order invoices.</p>
         </div>
-        <a class="button button-outline" href="{% url 'home' %}">Shop more <span aria-hidden="true">→</span></a>
+        <a class="btn btn-outline" href="{% url 'home' %}">
+            <span>Shop more gear</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+                <polyline points="12 5 19 12 12 19"></polyline>
+            </svg>
+        </a>
     </div>
 
     <section class="orders-list">
         {% for order in orders %}
-            <article class="order-card">
-                <div class="order-card-heading">
-                    <div><span class="order-id">Order #{{ order.id }}</span><p>Placed on {{ order.created_at }}</p></div>
-                    <span class="status-badge status-{{ order.status|lower }}">{{ order.status }}</span>
-                </div>
-                <div class="order-details">
-                    <div class="order-items">
-                        {% for item in order.items.all %}
-                            <div class="order-line">
-                                <div><strong>{{ item.product.name }}</strong><span>Qty: {{ item.quantity }}</span></div>
-                                <strong>Rs. {{ item.subtotal }}</strong>
-                            </div>
-                        {% endfor %}
+            <article class="order-card" aria-labelledby="order-{{ order.id }}-heading">
+                <!-- Order Card Header -->
+                <div class="order-card-header">
+                    <div>
+                        <h2 class="order-id" id="order-{{ order.id }}-heading">Order #{{ order.id }}</h2>
+                        <span class="order-date">Placed on {{ order.created_at|date:"M d, Y &bull; h:i A"|default:order.created_at }}</span>
                     </div>
-                    <div class="delivery-details">
-                        <span class="detail-label">Delivery details</span>
-                        <p>{{ order.phone }}</p>
-                        <p>{{ order.address }}</p>
+
+                    {% if order.status|lower == 'pending' %}
+                        <span class="order-status-badge status-pending">
+                            <span class="stock-dot" style="background-color: var(--color-warning);"></span>
+                            <span>Pending</span>
+                        </span>
+                    {% elif order.status|lower == 'shipped' %}
+                        <span class="order-status-badge status-shipped">
+                            <span class="stock-dot" style="background-color: #0284c7;"></span>
+                            <span>Shipped</span>
+                        </span>
+                    {% elif order.status|lower == 'delivered' %}
+                        <span class="order-status-badge status-delivered">
+                            <span class="stock-dot" style="background-color: var(--color-success);"></span>
+                            <span>Delivered</span>
+                        </span>
+                    {% else %}
+                        <span class="order-status-badge">
+                            <span>{{ order.status }}</span>
+                        </span>
+                    {% endif %}
+                </div>
+
+                <!-- Order Card Body (Items & Delivery Info) -->
+                <div class="order-card-body">
+                    <div>
+                        <table class="order-items-table">
+                            <tbody>
+                                {% for item in order.items.all %}
+                                    <tr>
+                                        <td>
+                                            <strong style="color: var(--color-text-primary);">{{ item.product.name }}</strong>
+                                            <span style="font-size: var(--text-xs); color: var(--color-text-muted); margin-left: var(--space-2);">&times; {{ item.quantity }}</span>
+                                        </td>
+                                        <td style="text-align: right; font-weight: 700; color: var(--color-text-primary); font-variant-numeric: tabular-nums;">
+                                            <span class="price-currency">Rs.</span>{{ item.subtotal }}
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="order-delivery-info">
+                        <div class="order-delivery-title">Delivery Details</div>
+                        <p><strong>Phone:</strong> {{ order.phone }}</p>
+                        <p><strong>Address:</strong> {{ order.address }}</p>
+                        <p style="margin-top: var(--space-2); color: var(--color-text-muted);">Method: Cash on Delivery (COD)</p>
                     </div>
                 </div>
-                <div class="order-total"><span>Order total</span><strong>Rs. {{ order.total }}</strong></div>
+
+                <!-- Order Card Footer -->
+                <div class="order-card-footer">
+                    <span style="font-size: var(--text-sm); color: var(--color-text-muted);">Total Amount</span>
+                    <strong style="font-family: var(--font-display); font-size: var(--text-xl); font-weight: 800; color: var(--color-text-primary); font-variant-numeric: tabular-nums;">
+                        <span class="price-currency">Rs.</span>{{ order.total }}
+                    </strong>
+                </div>
             </article>
         {% empty %}
-            <div class="empty-state page-empty">
-                <span class="empty-icon icon-file" aria-hidden="true"></span>
-                <h2>No orders yet</h2>
-                <p>Your orders will appear here once you place one.</p>
-                <a class="button" href="{% url 'home' %}">Explore products</a>
+            <div class="empty-state">
+                <div class="empty-state-icon-wrap" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                        <line x1="8" y1="21" x2="16" y2="21"></line>
+                        <line x1="12" y1="17" x2="12" y2="21"></line>
+                    </svg>
+                </div>
+                <h2 class="empty-state-title">No orders found</h2>
+                <p class="empty-state-desc">You have not placed any orders yet. Once you order mobile accessories or gadgets, you can track them here in real time.</p>
+                <a class="btn btn-primary" href="{% url 'home' %}">
+                    <span>Explore products</span>
+                </a>
             </div>
         {% endfor %}
     </section>

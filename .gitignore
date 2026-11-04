@@ -9,3 +9,5 @@ db.sqlite3
 staticfiles/
 media/
 .zed/
+.agents/
+understand.md

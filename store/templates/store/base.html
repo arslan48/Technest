@@ -3,57 +3,202 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="theme-color" content="#f5f7fb">
-    <title>{% block title %}TechNest | Mobile Accessories &amp; Gadgets{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#0f172a">
+    <title>{% block title %}TechNest | Mobile Accessories &amp; Everyday Gadgets{% endblock %}</title>
+
+    <!-- Preconnect to Google Fonts for optimal performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Main Stylesheet -->
     <link rel="stylesheet" href="{% static 'store/css/style.css' %}">
 </head>
 <body>
+    <!-- Sticky, Slim Header -->
     <header class="site-header">
         <div class="container header-inner">
-            <a class="brand" href="{% url 'home' %}" aria-label="TechNest home">
-                <span class="brand-mark" aria-hidden="true">T</span>
+            <!-- Brand Wordmark -->
+            <a class="brand" href="{% url 'home' %}" aria-label="TechNest homepage">
+                <span class="brand-emblem" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+                        <polyline points="2 17 12 22 22 17"></polyline>
+                        <polyline points="2 12 12 17 22 12"></polyline>
+                    </svg>
+                </span>
                 <span>Tech<span class="brand-accent">Nest</span></span>
             </a>
-            <nav class="main-nav" aria-label="Main navigation">
-                <a class="nav-link" href="{% url 'cart_detail' %}">Cart</a>
-                <a class="nav-link" href="{% url 'order_history' %}">My Orders</a>
+
+            <!-- Mobile Menu Toggle Button -->
+            <button class="nav-toggle-btn" id="nav-toggle-btn" type="button" aria-expanded="false" aria-controls="primary-nav" aria-label="Toggle navigation menu">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <line x1="3" y1="12" x2="21" y2="12"></line>
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <line x1="3" y1="18" x2="21" y2="18"></line>
+                </svg>
+            </button>
+
+            <!-- Navigation Links -->
+            <nav class="main-nav" id="primary-nav" aria-label="Main navigation">
+                <a class="nav-link" href="{% url 'home' %}#catalog-search">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                    <span>Search</span>
+                </a>
+                <a class="nav-link" href="{% url 'cart_detail' %}">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+                        <line x1="3" y1="6" x2="21" y2="6"></line>
+                        <path d="M16 10a4 4 0 0 1-8 0"></path>
+                    </svg>
+                    <span>Cart</span>
+                </a>
+                <a class="nav-link" href="{% url 'order_history' %}">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                        <line x1="8" y1="21" x2="16" y2="21"></line>
+                        <line x1="12" y1="17" x2="12" y2="21"></line>
+                    </svg>
+                    <span>My Orders</span>
+                </a>
+
                 {% if user.is_authenticated %}
-                    <span class="welcome-user">Hello, {{ user.username }}</span>
+                    <span class="user-greeting">
+                        <svg class="user-greeting-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="12" cy="7" r="4"></circle>
+                        </svg>
+                        <span>Hello, {{ user.username }}</span>
+                    </span>
                     <form class="logout-form" method="post" action="{% url 'logout' %}">
                         {% csrf_token %}
-                        <button class="nav-link nav-button" type="submit">Logout</button>
+                        <button class="logout-btn" type="submit" aria-label="Sign out of account">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                                <polyline points="16 17 21 12 16 7"></polyline>
+                                <line x1="21" y1="12" x2="9" y2="12"></line>
+                            </svg>
+                            <span>Logout</span>
+                        </button>
                     </form>
                 {% else %}
                     <a class="nav-link" href="{% url 'login' %}">Login</a>
-                    <a class="button button-small" href="{% url 'register' %}">Register</a>
+                    <a class="btn btn-primary btn-sm" href="{% url 'register' %}">Register</a>
                 {% endif %}
             </nav>
         </div>
     </header>
 
+    <!-- Main Content Area -->
     <main class="site-main">
         <div class="container">
             {% if messages %}
-                <div class="messages" role="status" aria-live="polite">
+                <div class="messages-container" role="status" aria-live="polite">
                     {% for message in messages %}
-                        <div class="message {{ message.tags }}">{{ message }}</div>
+                        <div class="alert alert-{{ message.tags|default:'info' }}">
+                            <div class="alert-icon" aria-hidden="true">
+                                {% if message.tags == 'error' %}
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <circle cx="12" cy="12" r="10"></circle>
+                                        <line x1="12" y1="8" x2="12" y2="12"></line>
+                                        <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                                    </svg>
+                                {% elif message.tags == 'success' %}
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                                        <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                                    </svg>
+                                {% else %}
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <circle cx="12" cy="12" r="10"></circle>
+                                        <line x1="12" y1="16" x2="12" y2="12"></line>
+                                        <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                                    </svg>
+                                {% endif %}
+                            </div>
+                            <div class="alert-content">{{ message }}</div>
+                        </div>
                     {% endfor %}
                 </div>
             {% endif %}
+
             {% block content %}{% endblock %}
         </div>
     </main>
 
+    <!-- Dark Technical Architecture Footer -->
     <footer class="site-footer">
-        <div class="container footer-inner">
-            <a class="brand footer-brand" href="{% url 'home' %}">
-                <span class="brand-mark" aria-hidden="true">T</span>
-                <span>Tech<span class="brand-accent">Nest</span></span>
-            </a>
-            <p>Everyday tech, thoughtfully chosen.</p>
-            <span class="footer-note">&copy; TechNest</span>
+        <div class="container">
+            <div class="footer-inner">
+                <!-- Brand & Positioning -->
+                <div class="footer-brand-col">
+                    <a class="brand footer-brand" href="{% url 'home' %}">
+                        <span class="brand-emblem" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+                                <polyline points="2 17 12 22 22 17"></polyline>
+                                <polyline points="2 12 12 17 22 12"></polyline>
+                            </svg>
+                        </span>
+                        <span>Tech<span class="brand-accent">Nest</span></span>
+                    </a>
+                    <p class="footer-tagline">
+                        Everyday mobile hardware, high-output chargers, and audio essentials thoughtfully curated for long-term durability.
+                    </p>
+                    <span class="footer-badge">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                        Cash on Delivery Nationwide
+                    </span>
+                </div>
+
+                <!-- Navigation Columns -->
+                <div>
+                    <h3 class="footer-col-title">Navigation</h3>
+                    <ul class="footer-links">
+                        <li><a href="{% url 'home' %}">Store Collection</a></li>
+                        <li><a href="{% url 'cart_detail' %}">View Shopping Cart</a></li>
+                        <li><a href="{% url 'order_history' %}">My Orders &amp; Tracking</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h3 class="footer-col-title">Account &amp; Support</h3>
+                    <ul class="footer-links">
+                        {% if user.is_authenticated %}
+                            <li><a href="{% url 'order_history' %}">Order History</a></li>
+                        {% else %}
+                            <li><a href="{% url 'login' %}">Customer Login</a></li>
+                            <li><a href="{% url 'register' %}">Create Account</a></li>
+                        {% endif %}
+                        <li><a href="{% url 'home' %}#catalog-search">Find Accessories</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Footer Bottom -->
+            <div class="footer-bottom">
+                <span>&copy; 2026 TechNest. All rights reserved.</span>
+                <span>Prices in Pakistani Rupees (Rs.) &bull; Pakistan</span>
+            </div>
         </div>
     </footer>
+
+    <!-- Minimal Vanilla JS for Mobile Navigation Toggle -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var toggleBtn = document.getElementById('nav-toggle-btn');
+            var mainNav = document.getElementById('primary-nav');
+            if (toggleBtn && mainNav) {
+                toggleBtn.addEventListener('click', function () {
+                    var isOpen = mainNav.classList.toggle('nav-open');
+                    toggleBtn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+                });
+            }
+        });
+    </script>
 </body>
 </html>
