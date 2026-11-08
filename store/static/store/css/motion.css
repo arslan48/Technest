@@ -1,0 +1,447 @@
+/* ==========================================================================
+   TechNest Motion Design System — motion.css
+   Tasteful, Modern, Accessible Micro-interactions for E-Commerce
+   Pure CSS Transitions & Keyframes (Transform & Opacity Only)
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. MOTION DESIGN TOKENS
+   -------------------------------------------------------------------------- */
+:root {
+    --motion-100: 100ms;
+    --motion-150: 150ms;
+    --motion-200: 200ms;
+    --motion-300: 300ms;
+    --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+    --ease-in: cubic-bezier(0.7, 0, 0.84, 0);
+}
+
+/* --------------------------------------------------------------------------
+   2. PAGE ENTER & LEAVE TRANSITIONS
+   -------------------------------------------------------------------------- */
+/* Page enter: fades in and rises 8px over 200ms ease-out on load */
+.site-main > .container {
+    animation: pageEnter var(--motion-200) var(--ease-out) both;
+    will-change: transform, opacity;
+}
+
+@keyframes pageEnter {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Page leave: triggered by Logout (or full page transition) */
+.site-main > .container.is-leaving {
+    animation: pageLeave var(--motion-150) var(--ease-in) forwards !important;
+    will-change: transform, opacity;
+}
+
+@keyframes pageLeave {
+    from {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    to {
+        opacity: 0;
+        transform: translateY(-8px);
+    }
+}
+
+/* --------------------------------------------------------------------------
+   3. PRODUCT CARDS (Home Page & Catalog)
+   -------------------------------------------------------------------------- */
+/* Soft hover lift (translateY -2px) with opacity-faded shadow pseudo-element */
+.product-card {
+    position: relative;
+    transition: transform var(--motion-150) var(--ease-out),
+                border-color var(--motion-150) var(--ease-out) !important;
+    will-change: transform;
+}
+
+/* Hardware-accelerated hover shadow via opacity fade */
+.product-card::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    box-shadow: var(--shadow-hover);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--motion-150) var(--ease-out);
+    will-change: opacity;
+}
+
+.product-card:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: var(--shadow-card) !important; /* Keep base shadow constant */
+}
+
+.product-card:hover::after {
+    opacity: 1;
+}
+
+/* Image zoom up to 1.03 on hover inside overflow-hidden frame */
+.product-card .product-card-img {
+    transition: transform var(--motion-150) var(--ease-out) !important;
+    will-change: transform;
+}
+
+.product-card:hover .product-card-img {
+    transform: scale(1.03) !important;
+}
+
+/* Stagger initial entrance for the first 8 cards (30ms per item, ~210ms total) */
+.product-grid > .product-card {
+    animation: cardFadeUp var(--motion-200) var(--ease-out) both;
+    will-change: transform, opacity;
+}
+
+/* Cap stagger to first 8 items via nth-child; cards 9+ appear without delay */
+.product-grid:not([data-filtered="true"]) > .product-card:nth-child(-n+8) {
+    animation-delay: calc(var(--i, 0) * 30ms);
+}
+
+.product-grid:not([data-filtered="true"]) > .product-card:nth-child(n+9) {
+    animation-delay: 0ms;
+}
+
+/* Never stagger filter or search updates */
+.product-grid[data-filtered="true"] > .product-card {
+    animation-delay: 0ms !important;
+}
+
+@keyframes cardFadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* --------------------------------------------------------------------------
+   4. BUTTONS & INTERACTIVE CONTROLS
+   -------------------------------------------------------------------------- */
+/* 100ms pressed state (translateY 1px) and instant focus-visible outline */
+.btn,
+.nav-link,
+.nav-toggle-btn,
+.logout-btn,
+.search-submit-btn,
+.cart-remove-btn,
+.category-chip,
+.filter-reset-link,
+.back-link,
+.alert-close-btn {
+    transition: transform var(--motion-100) var(--ease-out),
+                opacity var(--motion-100) var(--ease-out),
+                background-color var(--motion-150) var(--ease-out),
+                border-color var(--motion-150) var(--ease-out),
+                color var(--motion-150) var(--ease-out);
+}
+
+.btn:active,
+.search-submit-btn:active,
+.logout-btn:active,
+.cart-remove-btn:active,
+.category-chip:active {
+    transform: translateY(1px);
+}
+
+:focus-visible {
+    outline: 2px solid var(--color-accent) !important;
+    outline-offset: 3px !important;
+}
+
+/* Loading state cue */
+.btn[aria-busy="true"] {
+    opacity: 0.75;
+    cursor: wait;
+    pointer-events: none;
+}
+
+/* --------------------------------------------------------------------------
+   5. MOBILE NAVBAR MENU
+   -------------------------------------------------------------------------- */
+@media (max-width: 859.98px) {
+    .main-nav.nav-open {
+        animation: navMenuEnter var(--motion-200) var(--ease-out) both !important;
+        will-change: transform, opacity;
+    }
+
+    .main-nav.nav-closing {
+        display: flex !important;
+        animation: navMenuExit var(--motion-150) var(--ease-in) both !important;
+        will-change: transform, opacity;
+    }
+}
+
+@keyframes navMenuEnter {
+    from {
+        opacity: 0;
+        transform: translateY(-8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes navMenuExit {
+    from {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    to {
+        opacity: 0;
+        transform: translateY(-8px);
+    }
+}
+
+/* --------------------------------------------------------------------------
+   6. DJANGO NOTIFICATIONS & MESSAGES (Success & Error Feedback)
+   -------------------------------------------------------------------------- */
+/* Slide in from top with opacity + translateY(-8px to 0) */
+.alert {
+    animation: alertSlideDown var(--motion-200) var(--ease-out) both;
+    will-change: transform, opacity;
+}
+
+@keyframes alertSlideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Static check icon fades and scales from 0.9 to 1 in 300ms (no overshoot) */
+.alert-success .alert-icon svg,
+.alert-success .icon-success-check {
+    animation: checkIconScaleIn var(--motion-300) var(--ease-out) both;
+    will-change: transform, opacity;
+}
+
+@keyframes checkIconScaleIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* Dismissing message fade-out */
+.alert.is-dismissing {
+    animation: alertFadeOut var(--motion-150) var(--ease-in) forwards !important;
+    will-change: transform, opacity;
+}
+
+@keyframes alertFadeOut {
+    from {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    to {
+        opacity: 0;
+        transform: translateY(-8px);
+    }
+}
+
+/* Close button on messages */
+.alert-close-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    padding: 0;
+    margin-left: auto;
+    background: transparent;
+    border: none;
+    border-radius: var(--radius-xs);
+    color: currentColor;
+    opacity: 0.65;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+.alert-close-btn:hover {
+    opacity: 1;
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.alert-close-btn:focus-visible {
+    opacity: 1;
+    outline: 2px solid currentColor !important;
+    outline-offset: 1px !important;
+}
+
+.alert-close-btn svg {
+    width: 16px;
+    height: 16px;
+}
+
+/* --------------------------------------------------------------------------
+   7. ORDER PLACED HIGHLIGHT (Order History Page)
+   -------------------------------------------------------------------------- */
+/* Short highlight overlay that fades from visible to 0 opacity over 300ms */
+.order-card--highlight {
+    position: relative;
+}
+
+.order-card--highlight::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background-color: var(--color-success-bg);
+    border: 1px solid var(--color-success-border);
+    pointer-events: none;
+    z-index: 1;
+    animation: orderHighlightFade var(--motion-300) var(--ease-in) forwards;
+    will-change: opacity;
+}
+
+@keyframes orderHighlightFade {
+    from {
+        opacity: 0.8;
+    }
+    to {
+        opacity: 0;
+    }
+}
+
+/* --------------------------------------------------------------------------
+   8. AUTHENTICATION PAGES (Login & Register)
+   -------------------------------------------------------------------------- */
+/* Form card fades in and rises 8px over 200ms */
+.auth-card {
+    animation: authCardEnter var(--motion-200) var(--ease-out) both;
+    will-change: transform, opacity;
+}
+
+@keyframes authCardEnter {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Field errors fade in over 150ms */
+.django-form .errorlist {
+    animation: errorListEnter var(--motion-150) var(--ease-out) both;
+    will-change: transform, opacity;
+}
+
+@keyframes errorListEnter {
+    from {
+        opacity: 0;
+        transform: translateY(-4px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* --------------------------------------------------------------------------
+   9. CART INTERACTIONS
+   -------------------------------------------------------------------------- */
+/* Cart item row fade out on remove submit (150ms ease-in, no height collapse) */
+.cart-table tr.is-removing {
+    animation: cartRowFadeOut var(--motion-150) var(--ease-in) forwards !important;
+    will-change: opacity;
+}
+
+@keyframes cartRowFadeOut {
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
+    }
+}
+
+/* Clear focus ring on cart quantity input */
+.cart-qty-input:focus-visible {
+    outline: 2px solid var(--color-accent) !important;
+    outline-offset: 2px !important;
+}
+
+/* --------------------------------------------------------------------------
+   10. REDUCED MOTION PREFERENCES
+   -------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+    :root {
+        --motion-100: 0ms;
+        --motion-150: 0ms;
+        --motion-200: 0ms;
+        --motion-300: 0ms;
+    }
+
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        animation-delay: 0ms !important;
+        transition-duration: 0.01ms !important;
+        transition-delay: 0ms !important;
+        scroll-behavior: auto !important;
+    }
+
+    /* Remove all translate and scale transformations */
+    .site-main > .container,
+    .product-grid > .product-card,
+    .auth-card,
+    .alert,
+    .alert-success .alert-icon svg,
+    .alert-success .icon-success-check,
+    .django-form .errorlist,
+    .main-nav.nav-open,
+    .main-nav.nav-closing {
+        animation: none !important;
+        transform: none !important;
+        opacity: 1 !important;
+    }
+
+    .product-card:hover {
+        transform: none !important;
+    }
+
+    .product-card:hover .product-card-img {
+        transform: none !important;
+    }
+
+    .btn:active,
+    .search-submit-btn:active,
+    .logout-btn:active,
+    .cart-remove-btn:active,
+    .category-chip:active {
+        transform: none !important;
+    }
+
+    .order-card--highlight::before {
+        display: none !important;
+    }
+
+    .cart-table tr.is-removing {
+        opacity: 0.4 !important;
+    }
+}

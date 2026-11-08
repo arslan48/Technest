@@ -19,7 +19,7 @@
 
     <section class="orders-list">
         {% for order in orders %}
-            <article class="order-card" aria-labelledby="order-{{ order.id }}-heading">
+            <article class="order-card {% if forloop.first and messages %}order-card--highlight{% endif %}" aria-labelledby="order-{{ order.id }}-heading">
                 <!-- Order Card Header -->
                 <div class="order-card-header">
                     <div>

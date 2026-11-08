@@ -86,10 +86,10 @@
             {% endif %}
         </div>
 
-        <!-- Product Grid -->
-        <div class="product-grid">
+        <!-- Product Grid with Motion Stagger & Filter State -->
+        <div class="product-grid" {% if query or selected_category %}data-filtered="true"{% endif %}>
             {% for product in products %}
-                <article class="product-card">
+                <article class="product-card" style="--i: {{ forloop.counter0 }};">
                     <a class="product-card-media" href="{% url 'product_detail' product.id %}" aria-label="View details for {{ product.name }}">
                         {% if product.image %}
                             <img class="product-card-img" src="{{ product.image.url }}" alt="{{ product.name }}" loading="lazy" width="300" height="300">

@@ -25,11 +25,11 @@
                 <p class="checkout-card-desc">Where should we deliver your order in Pakistan?</p>
             </div>
 
-            <form class="django-form checkout-form" method="post" novalidate>
+            <form class="django-form checkout-form" method="post" novalidate data-submitting-text="Placing order...">
                 {% csrf_token %}
 
                 {% if form.non_field_errors %}
-                    <div class="alert alert-error" role="alert">
+                    <div class="alert alert-error" role="alert" data-message-tag="error">
                         <div class="alert-icon" aria-hidden="true">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <circle cx="12" cy="12" r="10"></circle>
@@ -76,7 +76,7 @@
                     </div>
                 </div>
 
-                <button class="btn btn-primary btn-full" type="submit" style="margin-top: var(--space-4);">
+                <button class="btn btn-primary btn-full" type="submit" style="margin-top: var(--space-4);" data-submitting-text="Placing order...">
                     <span>Place order</span>
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                         <line x1="5" y1="12" x2="19" y2="12"></line>

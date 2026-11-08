@@ -67,17 +67,17 @@
                                     <span class="price-currency">Rs.</span>{{ item.product.price }}
                                 </td>
                                 <td data-label="Quantity">
-                                    <form class="cart-qty-form" method="post" action="{% url 'update_cart' item.id %}">
+                                    <form class="cart-qty-form" method="post" action="{% url 'update_cart' item.id %}" data-submitting-text="Updating...">
                                         {% csrf_token %}
                                         <input class="cart-qty-input" type="number" name="quantity" value="{{ item.quantity }}" min="1" max="{{ item.product.stock }}" aria-label="Quantity for {{ item.product.name }}">
-                                        <button class="btn btn-outline btn-sm" type="submit" title="Update quantity">Update</button>
+                                        <button class="btn btn-outline btn-sm" type="submit" title="Update quantity" data-submitting-text="Updating...">Update</button>
                                     </form>
                                 </td>
                                 <td data-label="Subtotal">
                                     <strong style="color: var(--color-text-primary);"><span class="price-currency">Rs.</span>{{ item.subtotal }}</strong>
                                 </td>
                                 <td data-label="Remove">
-                                    <form method="post" action="{% url 'remove_from_cart' item.id %}" style="display: inline;">
+                                    <form class="cart-remove-form" method="post" action="{% url 'remove_from_cart' item.id %}" style="display: inline;">
                                         {% csrf_token %}
                                         <button class="cart-remove-btn" type="submit" aria-label="Remove {{ item.product.name }} from cart">
                                             Remove

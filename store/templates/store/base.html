@@ -14,6 +14,8 @@
 
     <!-- Main Stylesheet -->
     <link rel="stylesheet" href="{% static 'store/css/style.css' %}">
+    <!-- Motion Design System & Micro-interactions -->
+    <link rel="stylesheet" href="{% static 'store/css/motion.css' %}">
 </head>
 <body>
     <!-- Sticky, Slim Header -->
@@ -99,7 +101,7 @@
             {% if messages %}
                 <div class="messages-container" role="status" aria-live="polite">
                     {% for message in messages %}
-                        <div class="alert alert-{{ message.tags|default:'info' }}">
+                        <div class="alert alert-{{ message.tags|default:'info' }}" data-message-tag="{{ message.tags|default:'info' }}">
                             <div class="alert-icon" aria-hidden="true">
                                 {% if message.tags == 'error' %}
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -108,7 +110,7 @@
                                         <line x1="12" y1="16" x2="12.01" y2="16"></line>
                                     </svg>
                                 {% elif message.tags == 'success' %}
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <svg class="icon-success-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                         <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
                                         <polyline points="22 4 12 14.01 9 11.01"></polyline>
                                     </svg>
@@ -121,6 +123,12 @@
                                 {% endif %}
                             </div>
                             <div class="alert-content">{{ message }}</div>
+                            <button type="button" class="alert-close-btn" aria-label="Dismiss notification">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                                </svg>
+                            </button>
                         </div>
                     {% endfor %}
                 </div>
@@ -187,18 +195,7 @@
         </div>
     </footer>
 
-    <!-- Minimal Vanilla JS for Mobile Navigation Toggle -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            var toggleBtn = document.getElementById('nav-toggle-btn');
-            var mainNav = document.getElementById('primary-nav');
-            if (toggleBtn && mainNav) {
-                toggleBtn.addEventListener('click', function () {
-                    var isOpen = mainNav.classList.toggle('nav-open');
-                    toggleBtn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
-                });
-            }
-        });
-    </script>
+    <!-- Motion & Micro-interactions Script -->
+    <script src="{% static 'store/js/motion.js' %}" defer></script>
 </body>
 </html>
