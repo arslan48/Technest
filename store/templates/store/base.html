@@ -17,7 +17,23 @@
     <!-- Motion Design System & Micro-interactions -->
     <link rel="stylesheet" href="{% static 'store/css/motion.css' %}?v={{ APP_VERSION }}">
 </head>
-<body>
+<body class="{% block body_class %}{% endblock %}">
+    {% if announcements %}
+        <section class="announcement-bar" id="announcement-bar" role="region" aria-label="Store announcements">
+            <div class="announcement-track" aria-live="polite">
+                {% for announcement in announcements %}
+                    <p class="announcement-item{% if forloop.first %} is-active{% endif %}" data-announcement-index="{{ forloop.counter0 }}"{% if not forloop.first %} hidden{% endif %}>
+                        {% if announcement.link_url %}<a href="{{ announcement.link_url }}">{% endif %}{{ announcement.text }}{% if announcement.link_url %}</a>{% endif %}
+                    </p>
+                {% endfor %}
+            </div>
+            <div class="announcement-controls" aria-label="Announcement controls">
+                <button class="announcement-control" type="button" data-announcement-previous aria-label="Previous announcement" title="Previous announcement">‹</button>
+                <button class="announcement-control announcement-toggle" type="button" data-announcement-toggle aria-pressed="false" aria-label="Pause announcements">Pause</button>
+                <button class="announcement-control" type="button" data-announcement-next aria-label="Next announcement" title="Next announcement">›</button>
+            </div>
+        </section>
+    {% endif %}
     <!-- Sticky, Slim Header -->
     <header class="site-header">
         <div class="container header-inner">
@@ -32,6 +48,24 @@
                 </span>
                 <span>Tech<span class="brand-accent">Nest</span></span>
             </a>
+
+            <form class="compact-search" method="get" action="{% url 'home' %}" role="search" aria-label="Compact product search">
+                <button class="compact-search-mobile-toggle" type="button" aria-expanded="false" aria-label="Open search" aria-controls="compact-search-fields">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m16 16 5 5"></path></svg>
+                </button>
+                <div class="compact-search-fields" id="compact-search-fields">
+                    <input type="search" name="q" value="{{ search_query }}" placeholder="Search products" aria-label="Search accessories">
+                    <select name="category" aria-label="Select category">
+                        <option value="">All categories</option>
+                        {% for category in search_categories %}
+                            <option value="{{ category.id }}"{% if search_category == category.id|stringformat:"s" %} selected{% endif %}>{{ category.name }}</option>
+                        {% endfor %}
+                    </select>
+                    <button class="compact-search-submit" type="submit" aria-label="Search">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m16 16 5 5"></path></svg>
+                    </button>
+                </div>
+            </form>
 
             <!-- Mobile Menu Toggle Button -->
             <button class="nav-toggle-btn" id="nav-toggle-btn" type="button" aria-expanded="false" aria-controls="primary-nav" aria-label="Toggle navigation menu">
@@ -94,6 +128,8 @@
             </nav>
         </div>
     </header>
+
+    {% block large_search %}{% endblock %}
 
     <!-- Main Content Area -->
     <main class="site-main">
@@ -198,5 +234,6 @@
 
     <!-- Motion & Micro-interactions Script -->
     <script src="{% static 'store/js/motion.js' %}?v={{ APP_VERSION }}" defer></script>
+    <script src="{% static 'store/js/app.js' %}?v={{ APP_VERSION }}" defer></script>
 </body>
 </html>

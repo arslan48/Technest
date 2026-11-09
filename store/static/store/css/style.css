@@ -1959,5 +1959,293 @@ input[type="radio"] {
 input[type="checkbox"]:checked,
 input[type="radio"]:checked {
     background: var(--color-accent);
-    box-shadow: inset 0 0 0 3px var(--color-surface);
+    outline: 3px solid var(--color-surface);
+    outline-offset: -4px;
+}
+
+/* Announcement ticker */
+.announcement-bar {
+    min-height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-4);
+    padding-inline: var(--space-4);
+    color: var(--color-text-inverse);
+    background: var(--color-dark-element);
+    font-size: var(--text-xs);
+    font-weight: 600;
+    letter-spacing: 0.02em;
+}
+
+.announcement-track {
+    position: relative;
+    flex: 1 1 auto;
+    min-width: 0;
+    max-width: 760px;
+    height: 36px;
+    overflow: hidden;
+}
+
+.announcement-item {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    opacity: 0;
+    transform: translateY(100%);
+    transition: transform 200ms var(--ease-out), opacity 200ms var(--ease-out);
+}
+
+.announcement-item.is-active {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.announcement-item.is-leaving {
+    opacity: 0;
+    transform: translateY(-100%);
+}
+
+.announcement-item.is-entering {
+    opacity: 0;
+    transform: translateY(100%);
+}
+
+.announcement-item a {
+    color: inherit;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
+
+.announcement-controls {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+}
+
+.announcement-control {
+    min-width: 28px;
+    height: 28px;
+    padding: 0 5px;
+    border: 1px solid #6b6b66;
+    color: inherit;
+    background: transparent;
+    font: inherit;
+    cursor: pointer;
+}
+
+.announcement-control:hover {
+    background: #383838;
+}
+
+.announcement-toggle {
+    min-width: 48px;
+    font-size: 0.68rem;
+}
+
+[hidden] {
+    display: none !important;
+}
+
+/* Server-rendered full search and its reserved compact header counterpart */
+.large-search-section {
+    padding-block: 0 var(--space-4);
+    background: var(--color-bg);
+}
+
+.large-search-form {
+    display: flex;
+    align-items: stretch;
+    height: 44px;
+    max-width: var(--container-max);
+    border: 1px solid var(--color-border-strong);
+    background: var(--color-surface);
+}
+
+.large-search-input,
+.large-search-select,
+.compact-search input,
+.compact-search select {
+    min-width: 0;
+    height: 100%;
+    padding: 0 var(--space-3);
+    border: 0;
+    background: var(--color-surface);
+    color: var(--color-text-primary);
+}
+
+.large-search-input {
+    flex: 1 1 auto;
+}
+
+.large-search-select {
+    flex: 0 0 190px;
+    border-left: 1px solid var(--color-border);
+}
+
+.large-search-submit {
+    min-height: 42px;
+    border: 0;
+}
+
+.compact-search {
+    flex: 0 1 300px;
+    min-width: 0;
+    height: 40px;
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity 250ms var(--ease-out), transform 250ms var(--ease-out);
+}
+
+body.home-page.search-ready .compact-search {
+    opacity: 0;
+    transform: translateY(-4px);
+    pointer-events: none;
+}
+
+body.home-page.search-ready.compact-search-visible .compact-search {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+    transition-duration: 150ms;
+}
+
+.compact-search-fields {
+    display: flex;
+    height: 40px;
+    border: 1px solid var(--color-border);
+    background: var(--color-surface);
+}
+
+.compact-search input {
+    flex: 1 1 120px;
+    padding-inline: var(--space-2);
+}
+
+.compact-search select {
+    width: 110px;
+    padding-inline: var(--space-1);
+    border-left: 1px solid var(--color-border);
+    font-size: var(--text-xs);
+}
+
+.compact-search-submit {
+    width: 38px;
+    border: 0;
+    border-left: 1px solid var(--color-border);
+    background: var(--color-surface-subtle);
+    color: var(--color-text-primary);
+    cursor: pointer;
+}
+
+.compact-search-submit svg,
+.compact-search-mobile-toggle svg {
+    width: 18px;
+    height: 18px;
+}
+
+.compact-search-mobile-toggle {
+    display: none;
+}
+
+@media (max-width: 859.98px) {
+    .announcement-bar {
+        gap: var(--space-2);
+        padding-inline: var(--space-2);
+    }
+
+    .announcement-track {
+        max-width: none;
+    }
+
+    .announcement-toggle {
+        min-width: 42px;
+    }
+
+    .header-inner {
+        position: relative;
+        gap: var(--space-2);
+    }
+
+    .compact-search {
+        flex: 0 0 auto;
+        margin-left: auto;
+    }
+
+    .compact-search-mobile-toggle {
+        display: inline-flex;
+        width: 40px;
+        height: 40px;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid var(--color-border);
+        background: var(--color-surface);
+        color: var(--color-text-primary);
+    }
+
+    .compact-search-fields {
+        display: none;
+        position: absolute;
+        z-index: 3;
+        top: calc(100% + 6px);
+        right: 0;
+        left: 0;
+        height: 44px;
+        box-shadow: var(--shadow-sm);
+    }
+
+    .compact-search.is-open .compact-search-fields {
+        display: flex;
+    }
+
+    .compact-search-fields input {
+        flex: 1 1 auto;
+    }
+
+    .compact-search-fields select {
+        flex: 0 0 110px;
+    }
+
+    .large-search-section {
+        padding-inline: var(--space-4);
+    }
+
+    .large-search-form {
+        padding: 0;
+    }
+
+    .large-search-select {
+        flex-basis: 145px;
+    }
+}
+
+@media (max-width: 480px) {
+    .large-search-section {
+        padding-inline: var(--space-3);
+    }
+
+    .large-search-input {
+        padding-inline: var(--space-2);
+        font-size: var(--text-sm);
+    }
+
+    .large-search-select {
+        flex-basis: 118px;
+        padding-inline: var(--space-1);
+        font-size: var(--text-xs);
+    }
+
+    .large-search-submit {
+        padding-inline: var(--space-3);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .announcement-item,
+    .compact-search {
+        transition: none;
+    }
 }

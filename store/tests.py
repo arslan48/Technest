@@ -4,7 +4,7 @@ from pathlib import Path
 from tempfile import TemporaryDirectory
 
 from django.core.management import call_command
-from django.test import TestCase, override_settings
+from django.test import RequestFactory, TestCase, override_settings
 from django.urls import reverse
 
 from .context_processors import site_context
@@ -72,7 +72,7 @@ class StoreViewTests(TestCase):
         Announcement.objects.create(text="Later", position=2)
         Announcement.objects.create(text="Inactive", position=0, is_active=False)
         Announcement.objects.create(text="First", position=1)
-        announcements = site_context(None)["announcements"]
+        announcements = site_context(RequestFactory().get("/"))["announcements"]
         self.assertEqual([item.text for item in announcements], ["First", "Later"])
 
     def test_home_page_contains_active_announcement(self):

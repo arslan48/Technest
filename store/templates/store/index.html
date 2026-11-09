@@ -2,14 +2,26 @@
 
 {% block title %}TechNest | Mobile Accessories &amp; Everyday Gadgets{% endblock %}
 
+{% block body_class %}home-page{% endblock %}
+
+{% block large_search %}
+    <section class="large-search-section" aria-label="Search the catalog">
+        <form class="large-search-form container" method="get" action="{% url 'home' %}" role="search" id="catalog-search">
+            <label class="sr-only" for="catalog-query">Search accessories</label>
+            <input id="catalog-query" class="large-search-input" type="search" name="q" placeholder="Search chargers, cables, earbuds..." value="{{ query }}">
+            <label class="sr-only" for="catalog-category">Category</label>
+            <select id="catalog-category" class="large-search-select" name="category" aria-label="Select category">
+                <option value="">All Categories</option>
+                {% for category in categories %}
+                    <option value="{{ category.id }}"{% if selected_category == category.id|stringformat:"s" %} selected{% endif %}>{{ category.name }}</option>
+                {% endfor %}
+            </select>
+            <button class="btn btn-primary large-search-submit" type="submit">Search</button>
+        </form>
+    </section>
+{% endblock %}
+
 {% block content %}
-    {% if announcements %}
-        <aside class="announcement-list" aria-label="Store announcements">
-            {% for announcement in announcements %}
-                <p>{% if announcement.link_url %}<a href="{{ announcement.link_url }}">{% endif %}{{ announcement.text }}{% if announcement.link_url %}</a>{% endif %}</p>
-            {% endfor %}
-        </aside>
-    {% endif %}
     <!-- Compact Editorial Hero Section -->
     <section class="hero" id="catalog-search">
         <div class="hero-content">
@@ -20,32 +32,6 @@
             <h1 class="hero-title">Refined gear for your everyday devices.</h1>
             <p class="hero-subtitle">High-output chargers, durable braided cables, audio, and protective gear — curated with fair pricing across Pakistan.</p>
 
-            <!-- Prominent Search & Category Form -->
-            <form class="hero-search-form" method="get" action="{% url 'home' %}" role="search">
-                <div class="search-field-wrap">
-                    <svg class="search-field-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                        <circle cx="11" cy="11" r="8"></circle>
-                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                    </svg>
-                    <input class="search-input" type="search" name="q" placeholder="Search chargers, cables, earbuds..." value="{{ query }}" aria-label="Search accessories">
-                </div>
-
-                <div class="search-category-wrap">
-                    <select class="search-select" name="category" aria-label="Select Category">
-                        <option value="">All Categories</option>
-                        {% for category in categories %}
-                            <option value="{{ category.id }}" {% if selected_category == category.id|stringformat:"s" %}selected{% endif %}>{{ category.name }}</option>
-                        {% endfor %}
-                    </select>
-                    <svg class="search-select-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                        <polyline points="6 9 12 15 18 9"></polyline>
-                    </svg>
-                </div>
-
-                <button class="btn btn-primary search-submit-btn" type="submit">
-                    <span>Search</span>
-                </button>
-            </form>
         </div>
     </section>
 
