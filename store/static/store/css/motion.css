@@ -12,8 +12,7 @@
     --motion-150: 150ms;
     --motion-200: 200ms;
     --motion-300: 300ms;
-    --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
-    --ease-in: cubic-bezier(0.7, 0, 0.84, 0);
+    --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
 }
 
 /* --------------------------------------------------------------------------
@@ -38,7 +37,7 @@
 
 /* Page leave: triggered by Logout (or full page transition) */
 .site-main > .container.is-leaving {
-    animation: pageLeave var(--motion-150) var(--ease-in) forwards !important;
+    animation: pageLeave var(--motion-150) var(--ease-out) forwards !important;
     will-change: transform, opacity;
 }
 
@@ -69,7 +68,6 @@
     content: "";
     position: absolute;
     inset: 0;
-    border-radius: inherit;
     box-shadow: var(--shadow-hover);
     opacity: 0;
     pointer-events: none;
@@ -179,7 +177,7 @@
 
     .main-nav.nav-closing {
         display: flex !important;
-        animation: navMenuExit var(--motion-150) var(--ease-in) both !important;
+        animation: navMenuExit var(--motion-150) var(--ease-out) both !important;
         will-change: transform, opacity;
     }
 }
@@ -246,7 +244,7 @@
 
 /* Dismissing message fade-out */
 .alert.is-dismissing {
-    animation: alertFadeOut var(--motion-150) var(--ease-in) forwards !important;
+    animation: alertFadeOut var(--motion-150) var(--ease-out) forwards !important;
     will-change: transform, opacity;
 }
 
@@ -272,7 +270,6 @@
     margin-left: auto;
     background: transparent;
     border: none;
-    border-radius: var(--radius-xs);
     color: currentColor;
     opacity: 0.65;
     cursor: pointer;
@@ -307,12 +304,11 @@
     content: "";
     position: absolute;
     inset: 0;
-    border-radius: inherit;
     background-color: var(--color-success-bg);
     border: 1px solid var(--color-success-border);
     pointer-events: none;
     z-index: 1;
-    animation: orderHighlightFade var(--motion-300) var(--ease-in) forwards;
+    animation: orderHighlightFade var(--motion-300) var(--ease-out) forwards;
     will-change: opacity;
 }
 
@@ -367,7 +363,7 @@
    -------------------------------------------------------------------------- */
 /* Cart item row fade out on remove submit (150ms ease-in, no height collapse) */
 .cart-table tr.is-removing {
-    animation: cartRowFadeOut var(--motion-150) var(--ease-in) forwards !important;
+    animation: cartRowFadeOut var(--motion-150) var(--ease-out) forwards !important;
     will-change: opacity;
 }
 
