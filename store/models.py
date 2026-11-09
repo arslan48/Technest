@@ -34,8 +34,9 @@ class Product(models.Model):
     def discount_percent(self):
         if self.compare_at_price is None or self.compare_at_price <= self.price:
             return None
-        return round(
-            (self.compare_at_price - self.price) / self.compare_at_price * 100
+        return max(
+            1,
+            round((self.compare_at_price - self.price) / self.compare_at_price * 100),
         )
 
     @cached_property
