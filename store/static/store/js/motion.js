@@ -107,10 +107,9 @@
                 });
             }
 
-            // Auto-dismiss success and informational messages after ~5000ms
-            // Error messages do NOT auto-dismiss so the user never misses critical notices
-            const isError = alert.classList.contains('alert-error') || alert.dataset.messageTag === 'error';
-            if (!isError) {
+            // Only success messages auto-dismiss; errors and other notices remain until closed.
+            const isSuccess = alert.classList.contains('alert-success') || alert.dataset.messageTag === 'success';
+            if (isSuccess) {
                 setTimeout(function () {
                     dismissAlert();
                 }, 5000);

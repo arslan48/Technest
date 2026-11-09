@@ -33,6 +33,7 @@ const COLLAPSE_MS = 250;
             toggle.setAttribute('aria-pressed', String(manuallyPaused));
             toggle.setAttribute('aria-label', manuallyPaused ? 'Play announcements' : 'Pause announcements');
             toggle.textContent = manuallyPaused ? 'Play' : 'Pause';
+            toggle.disabled = reducedMotion;
         }
 
         function stopTimer() {
@@ -290,7 +291,7 @@ const COLLAPSE_MS = 250;
             form.action = product.addUrl;
             const button = form.querySelector('button[type="submit"]');
             button.disabled = product.stock <= 0;
-            if (product.stock <= 0) button.textContent = 'Out of stock';
+            button.textContent = product.stock <= 0 ? 'Out of stock' : 'Add to cart';
         }
 
         function setPanelProduct(card, product) {
