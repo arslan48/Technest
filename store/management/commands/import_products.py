@@ -34,19 +34,20 @@ class Command(BaseCommand):
                 category, _ = Category.objects.get_or_create(
                     name=row["category"].strip()
                 )
+                defaults = {
+                    "category": category,
+                    "description": row.get("description", "").strip(),
+                    "price": Decimal(row["price"].strip()),
+                    "stock": int(row["stock"].strip()),
+                }
+                if "compare_at_price" in row:
+                    compare_at_price = row["compare_at_price"].strip()
+                    defaults["compare_at_price"] = (
+                        Decimal(compare_at_price) if compare_at_price else None
+                    )
                 product, was_created = Product.objects.update_or_create(
                     name=row["name"].strip(),
-                    defaults={
-                        "category": category,
-                        "description": row.get("description", "").strip(),
-                        "price": Decimal(row["price"].strip()),
-                        "stock": int(row["stock"].strip()),
-                        "compare_at_price": (
-                            Decimal(row["compare_at_price"].strip())
-                            if row.get("compare_at_price", "").strip()
-                            else None
-                        ),
-                    },
+                    defaults=defaults,
                 )
 
                 image_name = row.get("image", "").strip()

@@ -79,6 +79,7 @@ class StoreViewTests(TestCase):
         Announcement.objects.create(text="Free delivery this week")
         response = self.client.get(reverse("home"))
         self.assertContains(response, "Free delivery this week")
+        self.assertContains(response, 'id="announcement-bar"')
 
     def test_import_command_updates_compare_price_and_imports_gallery_without_duplicates(self):
         with TemporaryDirectory() as temp_dir:
@@ -108,3 +109,20 @@ class StoreViewTests(TestCase):
             imported = Product.objects.get(name="Imported Charger")
             self.assertEqual(imported.compare_at_price, Decimal("1500.00"))
             self.assertEqual(imported.images.count(), 1)
+
+            legacy_csv = root / "legacy.csv"
+            with legacy_csv.open("w", newline="", encoding="utf-8") as file:
+                writer = csv.DictWriter(
+                    file, fieldnames=["category", "name", "description", "price", "stock"]
+                )
+                writer.writeheader()
+                writer.writerow({
+                    "category": "Chargers",
+                    "name": "Imported Charger",
+                    "description": "",
+                    "price": "1200.00",
+                    "stock": "4",
+                })
+            call_command("import_products", str(legacy_csv), images=str(images_dir), verbosity=0)
+            imported.refresh_from_db()
+            self.assertEqual(imported.compare_at_price, Decimal("1500.00"))
