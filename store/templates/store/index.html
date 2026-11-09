@@ -3,6 +3,13 @@
 {% block title %}TechNest | Mobile Accessories &amp; Everyday Gadgets{% endblock %}
 
 {% block content %}
+    {% if announcements %}
+        <aside class="announcement-list" aria-label="Store announcements">
+            {% for announcement in announcements %}
+                <p>{% if announcement.link_url %}<a href="{{ announcement.link_url }}">{% endif %}{{ announcement.text }}{% if announcement.link_url %}</a>{% endif %}</p>
+            {% endfor %}
+        </aside>
+    {% endif %}
     <!-- Compact Editorial Hero Section -->
     <section class="hero" id="catalog-search">
         <div class="hero-content">

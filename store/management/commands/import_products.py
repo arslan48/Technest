@@ -5,7 +5,7 @@ from pathlib import Path
 from django.core.files import File
 from django.core.management.base import BaseCommand, CommandError
 
-from store.models import Category, Product
+from store.models import Category, Product, ProductImage
 
 
 class Command(BaseCommand):
@@ -41,6 +41,11 @@ class Command(BaseCommand):
                         "description": row.get("description", "").strip(),
                         "price": Decimal(row["price"].strip()),
                         "stock": int(row["stock"].strip()),
+                        "compare_at_price": (
+                            Decimal(row["compare_at_price"].strip())
+                            if row.get("compare_at_price", "").strip()
+                            else None
+                        ),
                     },
                 )
 
@@ -55,6 +60,26 @@ class Command(BaseCommand):
                     else:
                         self.stdout.write(
                             self.style.WARNING(f"Image not found: {image_path}")
+                        )
+
+                gallery_names = row.get("gallery", "").strip()
+                for position, gallery_name in enumerate(
+                    (name.strip() for name in gallery_names.split("|") if name.strip()),
+                    start=0,
+                ):
+                    gallery_path = images_dir / gallery_name
+                    if not gallery_path.is_file():
+                        self.stdout.write(
+                            self.style.WARNING(f"Image not found: {gallery_path}")
+                        )
+                        continue
+                    if product.images.filter(image__endswith=gallery_name).exists():
+                        continue
+                    with gallery_path.open("rb") as image_file:
+                        ProductImage.objects.create(
+                            product=product,
+                            image=File(image_file, name=gallery_name),
+                            position=position,
                         )
 
                 if was_created:

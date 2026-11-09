@@ -13,9 +13,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 
     <!-- Main Stylesheet -->
-    <link rel="stylesheet" href="{% static 'store/css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'store/css/style.css' %}?v={{ APP_VERSION }}">
     <!-- Motion Design System & Micro-interactions -->
-    <link rel="stylesheet" href="{% static 'store/css/motion.css' %}">
+    <link rel="stylesheet" href="{% static 'store/css/motion.css' %}?v={{ APP_VERSION }}">
 </head>
 <body>
     <!-- Sticky, Slim Header -->
@@ -191,11 +191,12 @@
             <div class="footer-bottom">
                 <span>&copy; 2026 TechNest. All rights reserved.</span>
                 <span>Prices in Pakistani Rupees (Rs.) &bull; Pakistan</span>
+                <span>Version {{ APP_VERSION }}</span>
             </div>
         </div>
     </footer>
 
     <!-- Motion & Micro-interactions Script -->
-    <script src="{% static 'store/js/motion.js' %}" defer></script>
+    <script src="{% static 'store/js/motion.js' %}?v={{ APP_VERSION }}" defer></script>
 </body>
 </html>
