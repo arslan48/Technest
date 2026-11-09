@@ -160,9 +160,74 @@ const COLLAPSE_MS = 250;
         observer.observe(large);
     }
 
+    function initProductGalleries() {
+        const desktopPointer = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+
+        document.querySelectorAll('.product-card').forEach((card) => {
+            const gallery = card.querySelector('[data-product-gallery]');
+            if (!gallery) return;
+            const images = Array.from(gallery.querySelectorAll('.product-card-img'));
+            if (images.length < 2) return;
+
+            const indicators = Array.from(card.querySelectorAll('.gallery-indicator'));
+            let current = 0;
+            let intentTimer = 0;
+            let slideTimer = 0;
+
+            function selectImage(index) {
+                current = (index + images.length) % images.length;
+                images.forEach((image, imageIndex) => {
+                    image.classList.toggle('is-active', imageIndex === current);
+                });
+                indicators.forEach((indicator, indicatorIndex) => {
+                    indicator.classList.toggle('is-active', indicatorIndex === current);
+                });
+            }
+
+            if (desktopPointer && !reducedMotion && Number(card.querySelector('[data-stock]')?.dataset.stock) > 0) {
+                card.addEventListener('pointerenter', () => {
+                    intentTimer = window.setTimeout(() => {
+                        images.slice(1).forEach((image) => {
+                            const preload = new Image();
+                            preload.src = image.currentSrc || image.src;
+                        });
+                        slideTimer = window.setInterval(() => selectImage(current + 1), SLIDE_INTERVAL_MS);
+                    }, HOVER_INTENT_MS);
+                });
+                card.addEventListener('pointerleave', () => {
+                    window.clearTimeout(intentTimer);
+                    window.clearInterval(slideTimer);
+                    selectImage(0);
+                });
+            } else if (!desktopPointer) {
+                let scrollFrame = 0;
+                gallery.addEventListener('scroll', () => {
+                    window.cancelAnimationFrame(scrollFrame);
+                    scrollFrame = window.requestAnimationFrame(() => {
+                        selectImage(Math.round(gallery.scrollLeft / gallery.clientWidth));
+                    });
+                }, { passive: true });
+            }
+        });
+
+        document.querySelectorAll('[data-detail-gallery]').forEach((gallery) => {
+            const images = Array.from(gallery.querySelectorAll('.detail-img'));
+            const thumbnails = Array.from(gallery.parentElement.querySelectorAll('[data-detail-thumbnail]'));
+            thumbnails.forEach((thumbnail) => {
+                thumbnail.addEventListener('click', () => {
+                    const selected = Number(thumbnail.dataset.detailThumbnail);
+                    images.forEach((image, index) => image.classList.toggle('is-active', index === selected));
+                    thumbnails.forEach((button, index) => button.classList.toggle('is-active', index === selected));
+                });
+            });
+        });
+    }
+
     function init() {
+        document.documentElement.classList.add('js-enabled');
         initAnnouncements();
         initCompactSearch();
+        initProductGalleries();
     }
 
     if (document.readyState === 'loading') {

@@ -16,8 +16,21 @@
     <article class="product-detail-layout">
         <!-- Media Gallery Column -->
         <div class="detail-gallery">
-            {% if product.image %}
-                <img class="detail-img" src="{{ product.image.url }}" alt="{{ product.name }}" loading="eager" width="500" height="500">
+            {% if product.gallery_images %}
+                <div class="detail-gallery-stage" data-detail-gallery>
+                    {% for image_url in product.gallery_images %}
+                        <img class="detail-img{% if forloop.first %} is-active{% endif %}" src="{{ image_url }}" alt="{{ product.name }}" loading="{% if forloop.first %}eager{% else %}lazy{% endif %}" width="500" height="500" data-slide-index="{{ forloop.counter0 }}">
+                    {% endfor %}
+                </div>
+                {% if product.gallery_images|length > 1 %}
+                    <div class="detail-gallery-thumbnails" aria-label="Product images">
+                        {% for image_url in product.gallery_images %}
+                            <button class="detail-gallery-thumbnail{% if forloop.first %} is-active{% endif %}" type="button" data-detail-thumbnail="{{ forloop.counter0 }}" aria-label="Show product image {{ forloop.counter }}">
+                                <img src="{{ image_url }}" alt="" loading="lazy" width="72" height="72">
+                            </button>
+                        {% endfor %}
+                    </div>
+                {% endif %}
             {% else %}
                 <div class="product-placeholder" aria-hidden="true">
                     {% if product.category.name == "Chargers" %}
@@ -100,7 +113,11 @@
 
             <div class="detail-price-wrap">
                 <span class="price-currency">Rs.</span>
-                <span class="detail-price">{{ product.price }}</span>
+                <span class="detail-price">{{ product.price|floatformat:"-2" }}</span>
+                {% if product.discount_percent %}
+                    <del class="compare-at-price">Rs. {{ product.compare_at_price|floatformat:"-2" }}</del>
+                    <span class="discount-tag">{{ product.discount_percent }}% off</span>
+                {% endif %}
             </div>
 
             <!-- Stock Status Indicator -->

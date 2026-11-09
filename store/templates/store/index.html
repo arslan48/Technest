@@ -82,10 +82,21 @@
         <!-- Product Grid with Motion Stagger & Filter State -->
         <div class="product-grid" {% if query or selected_category %}data-filtered="true"{% endif %}>
             {% for product in products %}
-                <article class="product-card" style="--i: {{ forloop.counter0 }};">
+                <article class="product-card" style="--i: {{ forloop.counter0 }};" data-product-id="{{ product.id }}">
                     <a class="product-card-media" href="{% url 'product_detail' product.id %}" aria-label="View details for {{ product.name }}">
-                        {% if product.image %}
-                            <img class="product-card-img" src="{{ product.image.url }}" alt="{{ product.name }}" loading="lazy" width="300" height="300">
+                        {% if product.gallery_images %}
+                            <span class="product-card-images" data-product-gallery>
+                                {% for image_url in product.gallery_images %}
+                                    <img class="product-card-img{% if forloop.first %} is-active{% endif %}" src="{{ image_url }}" alt="{{ product.name }}" loading="lazy" width="300" height="300" data-slide-index="{{ forloop.counter0 }}">
+                                {% endfor %}
+                            </span>
+                            {% if product.gallery_images|length > 1 %}
+                                <span class="gallery-indicators" aria-hidden="true">
+                                    {% for image_url in product.gallery_images %}
+                                        <span class="gallery-indicator{% if forloop.first %} is-active{% endif %}" data-indicator-index="{{ forloop.counter0 }}"></span>
+                                    {% endfor %}
+                                </span>
+                            {% endif %}
                         {% else %}
                             <div class="product-placeholder" aria-hidden="true">
                                 {% if product.category.name == "Chargers" %}
@@ -161,6 +172,20 @@
                         {% endif %}
                         <span class="product-card-category">{{ product.category.name }}</span>
                     </a>
+                    <button class="quick-view-button" type="button" aria-label="Quick view {{ product.name }}" data-quick-view>Quick view</button>
+                    <div class="product-card-data" hidden
+                        data-name="{{ product.name }}"
+                        data-category="{{ product.category.name }}"
+                        data-description="{{ product.description }}"
+                        data-price="{{ product.price|floatformat:'-2' }}"
+                        data-compare-at-price="{% if product.discount_percent %}{{ product.compare_at_price|floatformat:'-2' }}{% endif %}"
+                        data-stock="{{ product.stock }}"
+                        data-detail-url="{% url 'product_detail' product.id %}"
+                        data-add-url="{% url 'add_to_cart' product.id %}">
+                        {% for image_url in product.gallery_images %}
+                            <span data-gallery-image="{{ image_url }}" data-gallery-alt="{{ product.name }}"></span>
+                        {% endfor %}
+                    </div>
 
                     <div class="product-card-body">
                         <h3 class="product-card-title">
@@ -169,7 +194,11 @@
 
                         <div class="product-card-pricing">
                             <div class="product-price">
-                                <span class="price-currency">Rs.</span>{{ product.price }}
+                                <span class="price-currency">Rs.</span>{{ product.price|floatformat:"-2" }}
+                                {% if product.discount_percent %}
+                                    <del class="compare-at-price">Rs. {{ product.compare_at_price|floatformat:"-2" }}</del>
+                                    <span class="discount-tag">{{ product.discount_percent }}% off</span>
+                                {% endif %}
                             </div>
 
                             {% if product.stock == 0 %}
@@ -180,7 +209,7 @@
                             {% elif product.stock <= 5 and product.stock > 0 %}
                                 <span class="stock-tag low-stock">
                                     <span class="stock-dot"></span>
-                                    <span>Only {{ product.stock }} left</span>
+                                    <span>Low stock · only {{ product.stock }} left</span>
                                 </span>
                             {% else %}
                                 <span class="stock-tag in-stock">

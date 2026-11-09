@@ -75,25 +75,6 @@
     will-change: opacity;
 }
 
-.product-card:hover {
-    transform: translateY(-2px) !important;
-    box-shadow: var(--shadow-card) !important; /* Keep base shadow constant */
-}
-
-.product-card:hover::after {
-    opacity: 1;
-}
-
-/* Image zoom up to 1.03 on hover inside overflow-hidden frame */
-.product-card .product-card-img {
-    transition: transform var(--motion-150) var(--ease-out) !important;
-    will-change: transform;
-}
-
-.product-card:hover .product-card-img {
-    transform: scale(1.03) !important;
-}
-
 /* Stagger initial entrance for the first 8 cards (30ms per item, ~210ms total) */
 .product-grid > .product-card {
     animation: cardFadeUp var(--motion-200) var(--ease-out) both;
